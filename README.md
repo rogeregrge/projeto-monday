@@ -26,6 +26,7 @@ Este projeto é um exemplo básico de integração com a plataforma **monday.com
 ```bash
 npm install
 npm run dev
+```
 
 ## Deploy
 
