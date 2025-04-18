@@ -26,3 +26,13 @@ Este projeto é um exemplo básico de integração com a plataforma **monday.com
 ```bash
 npm install
 npm run dev
+
+## Deploy
+
+Este projeto está hospedado na Vercel:
+
+🔗 [https://projeto-monday.vercel.app/](https://projeto-monday.vercel.app/)
+
+Ou clique no botão abaixo para importar e criar sua própria instância:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project)
