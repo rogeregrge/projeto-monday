@@ -6,18 +6,23 @@
 ![Node](https://img.shields.io/badge/Node-18.x-green?logo=node.js)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-Este projeto é uma integração simples com a plataforma monday.com utilizando React e Vite. Ele demonstra como obter o contexto da board, listar tarefas por grupo (estilo Kanban) e interagir com a API oficial da monday via `monday-sdk-js`.
+Este projeto é um exemplo básico de integração com a plataforma **monday.com**, utilizando **React** e **Vite**. Ele demonstra um **Hello World funcional**, com o SDK oficial da monday, sendo renderizado dentro de uma Visualização de Quadro (Board View).
 
 ## Funcionalidades
 
-- Obtenção do contexto da board via SDK
-- Listagem de itens organizados por grupo
-- Integração completa com API GraphQL da monday
-- Estrutura moderna com Vite e React 18+
+- Exibe um Hello World estilizado
+- Integra o SDK oficial da monday.com
+- Obtém o contexto da board onde o app está instalado
+- Pronto para deploy e uso em ambiente monday
+
+## Tecnologias
+
+- React 18+
+- Vite
+- monday-sdk-js
 
 ## Como rodar localmente
 
 ```bash
 npm install
 npm run dev
-
