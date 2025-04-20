@@ -1,9 +1,21 @@
 import { useEffect, useState } from "react";
 import mondaySdk from "monday-sdk-js";
 
+import {
+  Loader,
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+  Text,
+  Heading,
+  Box,
+} from "@vibe/core";
+
 const monday = mondaySdk();
 
-export default function BoardItemsTable() {
+export default function BoardItemsList() {
   const [items, setItems] = useState([]);
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,25 +69,31 @@ export default function BoardItemsTable() {
       });
   }
 
-  if (loading) return <p>Carregando dados...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (loading) return <Loader size={32} />;
+  if (error)
+    return (
+      <Text color="error" size="medium">
+        {error}
+      </Text>
+    );
 
   return (
-    <div>
-      <h3>Itens do Board</h3>
-      <table border="1" cellPadding="8" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>Item</th>
+    <Box p={3}>
+      <Heading type={Heading.types.h3}>Itens do Board</Heading>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableCell>Item</TableCell>
             {columns.map((col) => (
-              <th key={col.id}>{col.title}</th>
+              <TableCell key={col.id}>{col.title}</TableCell>
             ))}
-          </tr>
-        </thead>
-        <tbody>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {items.map((item) => (
-            <tr key={item.id}>
-              <td>{item.name}</td>
+            <TableRow key={item.id}>
+              <TableCell>{item.name}</TableCell>
               {columns.map((col) => {
                 const colVal = item.column_values.find((c) => c.id === col.id);
                 let display = colVal?.text || "—";
@@ -89,16 +107,14 @@ export default function BoardItemsTable() {
                       </a>
                     );
                   }
-                } catch (e) {
-                  // ignora erros de JSON
-                }
+                } catch (e) {}
 
-                return <td key={col.id}>{display}</td>;
+                return <TableCell key={col.id}>{display}</TableCell>;
               })}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </Box>
   );
 }
