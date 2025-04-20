@@ -11,6 +11,8 @@ export default function BoardItemsList() {
   useEffect(() => {
     monday.get("context").then((res) => {
       const boardId = res.data.boardId;
+      console.log("Monday context:", res.data);
+
       if (boardId) {
         fetchBoardItems(boardId);
       } else {
@@ -33,13 +35,24 @@ export default function BoardItemsList() {
         }
       `)
       .then((res) => {
-        const boardItems = res.data.boards[0]?.items || [];
-        setItems(boardItems);
+        console.log("GraphQL response:", res);
+
+        if (
+          res.data &&
+          res.data.boards &&
+          res.data.boards[0] &&
+          res.data.boards[0].items
+        ) {
+          setItems(res.data.boards[0].items);
+        } else {
+          setError("Nenhum item encontrado no board.");
+        }
+
         setLoading(false);
       })
       .catch((err) => {
         setError("Erro ao buscar itens do board.");
-        console.error(err);
+        console.error("Erro na query GraphQL:", err);
         setLoading(false);
       });
   }
@@ -50,13 +63,17 @@ export default function BoardItemsList() {
   return (
     <div>
       <h3>Itens do Board</h3>
-      <ul>
-        {items.map((item) => (
-          <li key={item.id}>
-            #{item.id} - {item.name}
-          </li>
-        ))}
-      </ul>
+      {items.length === 0 ? (
+        <p>Nenhum item encontrado.</p>
+      ) : (
+        <ul>
+          {items.map((item) => (
+            <li key={item.id}>
+              #{item.id} - {item.name}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
