@@ -1,14 +1,17 @@
 import { useState } from "react";
 import mondaySdk from "monday-sdk-js"
 import { useEffect } from "react";
+import BoardItemsList from "../components/BoardItemsList";
 
 const monday = mondaySdk();
 
 
 function App() {
+  const [boardId, setBoardId] = useState(null);
+
   useEffect(() => {
-    monday.listen("context", (res) => {
-      console.log("Monday context:", res);
+    monday.get("context").then((res) => {
+      setBoardId(res.data.boardId);
     });
   }, []);
 
@@ -16,6 +19,8 @@ function App() {
     <div style={{padding: "2rem", textAlign:"center"}}>
       <h1>Hello World</h1>
       <p>Integrado com Monday.com</p>
+      <p>ID do board: {boardId}</p>
+      <BoardItemsList />
     </div>
   );
 }
