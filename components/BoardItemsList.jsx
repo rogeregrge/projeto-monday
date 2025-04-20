@@ -11,10 +11,10 @@ export default function BoardItemsList() {
   useEffect(() => {
     monday.get("context").then((res) => {
       const boardId = res.data.boardId;
-      console.log("Monday context:", res.data);
+      console.log("Contexto:", res.data);
 
       if (boardId) {
-        fetchBoardItems(boardId);
+        fetchBoardData(boardId);
       } else {
         setError("Board ID não encontrado.");
         setLoading(false);
@@ -22,32 +22,32 @@ export default function BoardItemsList() {
     });
   }, []);
 
-  function fetchBoardItems(boardId) {
+  function fetchBoardData(boardId) {
     monday
       .api(`
         query {
           boards(ids: ${boardId}) {
-            items {
-              id
-              name
+            name
+            items_page(limit: 50) {
+              items {
+                id
+                name
+                group {
+                  id
+                }
+                column_values {
+                  id
+                  value
+                }
+              }
             }
           }
         }
       `)
       .then((res) => {
-        console.log("GraphQL response:", res);
-
-        if (
-          res.data &&
-          res.data.boards &&
-          res.data.boards[0] &&
-          res.data.boards[0].items
-        ) {
-          setItems(res.data.boards[0].items);
-        } else {
-          setError("Nenhum item encontrado no board.");
-        }
-
+        console.log("Resposta:", res);
+        const boardItems = res.data.boards[0].items_page.items || [];
+        setItems(boardItems);
         setLoading(false);
       })
       .catch((err) => {
@@ -68,8 +68,16 @@ export default function BoardItemsList() {
       ) : (
         <ul>
           {items.map((item) => (
-            <li key={item.id}>
-              #{item.id} - {item.name}
+            <li key={item.id} style={{ marginBottom: "1rem" }}>
+              <strong>{item.name}</strong> (Grupo: {item.group?.id})<br />
+              {item.column_values.map((col) => (
+                <div key={col.id}>
+                  <small>
+                    <strong>{col.id}:</strong>{" "}
+                    {col.value ? col.value : "—"}
+                  </small>
+                </div>
+              ))}
             </li>
           ))}
         </ul>
