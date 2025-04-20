@@ -16,12 +16,14 @@ function App() {
   }, []);
 
   return(
-    <div style={{padding: "2rem", textAlign:"center"}}>
-      <h1>Hello World</h1>
-      <p>Integrado com Monday.com</p>
-      <p>ID do board: {boardId}</p>
-      <BoardItemsList />
-    </div>
+<div id="root">
+  <div className="app-container">
+    <h1>Hello World</h1>
+    <p>Integrado com Monday.com</p>
+    <p>ID do board: {boardId}</p>
+    <BoardItemsList />
+  </div>
+</div>
   );
 }
 
