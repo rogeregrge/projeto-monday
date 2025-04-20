@@ -57,9 +57,15 @@ export default function BoardItemsList() {
         }
       `)
       .then((res) => {
-        const board = res.data.boards[0];
+        const board = res?.data?.boards?.[0];
+        if (!board) {
+          setError("Board inválido ou sem dados.");
+          setLoading(false);
+          return;
+        }
+
         setColumns(board.columns || []);
-        setItems(board.items_page.items || []);
+        setItems(board.items_page?.items || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -95,7 +101,7 @@ export default function BoardItemsList() {
             <TableRow key={item.id}>
               <TableCell>{item.name}</TableCell>
               {columns.map((col) => {
-                const colVal = item.column_values.find((c) => c.id === col.id);
+                const colVal = item.column_values?.find((c) => c.id === col.id);
                 let display = colVal?.text || "—";
 
                 try {
@@ -107,7 +113,9 @@ export default function BoardItemsList() {
                       </a>
                     );
                   }
-                } catch (e) {}
+                } catch (e) {
+                  // ignora parse error
+                }
 
                 return <TableCell key={col.id}>{display}</TableCell>;
               })}
