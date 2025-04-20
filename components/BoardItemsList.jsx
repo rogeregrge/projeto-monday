@@ -1,21 +1,10 @@
 import { useEffect, useState } from "react";
 import mondaySdk from "monday-sdk-js";
 
-import {
-  Loader,
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  Text,
-  Heading,
-  Box,
-} from "@vibe/core";
 
 const monday = mondaySdk();
 
-export default function BoardItemsList() {
+export default function BoardItemsTable() {
   const [items, setItems] = useState([]);
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,15 +46,9 @@ export default function BoardItemsList() {
         }
       `)
       .then((res) => {
-        const board = res?.data?.boards?.[0];
-        if (!board) {
-          setError("Board inválido ou sem dados.");
-          setLoading(false);
-          return;
-        }
-
+        const board = res.data.boards[0];
         setColumns(board.columns || []);
-        setItems(board.items_page?.items || []);
+        setItems(board.items_page.items || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -75,33 +58,27 @@ export default function BoardItemsList() {
       });
   }
 
-  if (loading) return <Loader size={32} />;
-  if (error)
-    return (
-      <Text color="error" size="medium">
-        {error}
-      </Text>
-    );
+  if (loading) return <p>Carregando dados...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <Box p={3}>
-      <Heading type={Heading.types.h3}>Itens do Board</Heading>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableCell>Item</TableCell>
+    <div>
+      <h3>Itens do Board</h3>
+      <table border="1" cellPadding="8" cellSpacing="0">
+        <thead>
+          <tr>
+            <th>Item</th>
             {columns.map((col) => (
-              <TableCell key={col.id}>{col.title}</TableCell>
+              <th key={col.id}>{col.title}</th>
             ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+          </tr>
+        </thead>
+        <tbody>
           {items.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>{item.name}</TableCell>
+            <tr key={item.id}>
+              <td>{item.name}</td>
               {columns.map((col) => {
-                const colVal = item.column_values?.find((c) => c.id === col.id);
+                const colVal = item.column_values.find((c) => c.id === col.id);
                 let display = colVal?.text || "—";
 
                 try {
@@ -114,15 +91,15 @@ export default function BoardItemsList() {
                     );
                   }
                 } catch (e) {
-                  // ignora parse error
+                  // ignora erros de JSON
                 }
 
-                return <TableCell key={col.id}>{display}</TableCell>;
+                return <td key={col.id}>{display}</td>;
               })}
-            </TableRow>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
-    </Box>
+        </tbody>
+      </table>
+    </div>
   );
 }
